@@ -126,19 +126,22 @@ autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 autocmd FileType ruby,eruby :let g:AutoCloseExpandEnterOn=""
 autocmd Filetype gitcommit setlocal spell textwidth=72
 
-function! NumberToggle()
-  if(&relativenumber == 1)
-    set number
-  else
-    set relativenumber
-  endif
-endfunc
+if version >= 703
+  function! NumberToggle()
+    if(&relativenumber == 1)
+      set number
+    else
+      set relativenumber
+    endif
+  endfunc
 
 nnoremap <C-n> :call NumberToggle()<cr>
 autocmd FocusLost * :set number
 autocmd InsertEnter * :set number
 autocmd InsertLeave * :set relativenumber
 autocmd CursorMoved * :set relativenumber
+endif
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " SWITCH BETWEEN TEST AND PRODUCTION CODE
