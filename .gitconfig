@@ -1,0 +1,7 @@
+[user]
+	name = Derek Bender
+	email = derek@madebymarket.com
+[core]
+	excludesfile = /Users/derek/.gitignore_global
+[heroku]
+	account = work
