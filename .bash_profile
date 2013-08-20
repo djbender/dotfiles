@@ -1,6 +1,7 @@
 export LC_CTYPE=en_US.UTF-8
 export LANG=en_US.UTF-8
 unset LC_ALL
+: ${rvm_path:="$HOME/.rvm"}
 [[ -s "$rvm_path/scripts/rvm" ]] && source "$rvm_path/scripts/rvm" # Load RVM into a shell session *as a function*
 [[ -s "$rvm_path/contrib/ps1_functions" ]] &&
   source "$rvm_path/contrib/ps1_functions"

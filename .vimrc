@@ -4,7 +4,7 @@
 autocmd!
 
 call pathogen#infect()
-call pathogen#helptags()
+#call pathogen#helptags()
 
 "autocmd VimEnter * NERDTree
 "autocmd BufEnter * NERDTreeMirror

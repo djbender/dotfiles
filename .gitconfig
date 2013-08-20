@@ -5,3 +5,9 @@
 	excludesfile = /Users/derek/.gitignore_global
 [heroku]
 	account = work
+[log]
+	decorate = full
+[color]
+	ui = true
+[help]
+	autocorrect = 1
