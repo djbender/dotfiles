@@ -3,6 +3,7 @@
 	email = derek@madebymarket.com
 [core]
 	excludesfile = /Users/derek/.gitignore_global
+	editor = /usr/local/bin/vim
 [heroku]
 	account = work
 [log]

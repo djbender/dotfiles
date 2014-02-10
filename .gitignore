@@ -123,3 +123,20 @@
 
 /VirtualBox\ VMs
 *.rb
+
+.aspell.en.prepl
+.aspell.en.pws
+.cgminer/
+.config/
+.devtunnel_auth
+.lighttable/
+.mono/
+.node-gyp/
+.ports.json
+.pow
+.zlogin
+.zshrc
+Applications/
+My Games/
+Nitrous/
+index.html
