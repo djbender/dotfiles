@@ -31,7 +31,7 @@ set scrolloff=3
 " display incomplete commands
 set showcmd
 " Fix slow O inserts
-:set timeout timeoutlen=1000 ttimeoutlen=100
+set timeout timeoutlen=1000 ttimeoutlen=100
 
 set hidden
 set visualbell
@@ -174,3 +174,10 @@ endfunction
 let mapleader=","
 nnoremap <leader>. :call OpenTestAlternate()<cr>
 let mapleader="\\"
+
+" for go
+"filetype off
+"filetype plugin indent off
+"set runtimepath+=/usr/local/go/misc/vim
+"filetype plugin indent on
+"au BufRead,BufNewFile *.md set filetype=markdown
