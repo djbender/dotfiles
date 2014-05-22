@@ -78,7 +78,7 @@ set showcmd
 syntax on
 set t_Co=256 " 256 colors
 set background=light
-color default "was: mac_classic
+color default
 filetype plugin indent on
 set encoding=utf-8
 
@@ -86,7 +86,7 @@ set wildmode=longest,list
 set wildmenu
 let mapleader="," "what. why?
 set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)\ [%{&fo}]
-hi User1 term=inverse,bold cterm=inverse,bold ctermfg=red
+"hi User1 term=inverse,bold cterm=inverse,bold ctermfg=red
 map <Left> :echo "no!"<cr>
 map <Right> :echo "no!"<cr>
 map <Up> :echo "no!"<cr>
@@ -126,21 +126,21 @@ autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 autocmd FileType ruby,eruby :let g:AutoCloseExpandEnterOn=""
 autocmd Filetype gitcommit setlocal spell textwidth=72
 
-if version >= 703
-  function! NumberToggle()
-    if(&relativenumber == 1)
-      set number
-    else
-      set relativenumber
-    endif
-  endfunc
-
-nnoremap <C-n> :call NumberToggle()<cr>
-autocmd FocusLost * :set number
-autocmd InsertEnter * :set number
-autocmd InsertLeave * :set relativenumber
-autocmd CursorMoved * :set relativenumber
-endif
+"if version >= 703
+"  function! NumberToggle()
+"    if(&relativenumber == 1)
+"      set number
+"    else
+"      set relativenumber
+"    endif
+"  endfunc
+"
+"nnoremap <C-n> :call NumberToggle()<cr>
+"autocmd FocusLost * :set number
+"autocmd InsertEnter * :set number
+"autocmd InsertLeave * :set relativenumber
+"autocmd CursorMoved * :set relativenumber
+"endif
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -156,14 +156,20 @@ function! AlternateForCurrentFile()
   let in_spec = match(current_file, '^spec/') != -1
   let going_to_spec = !in_spec
   let in_app = match(current_file, '\<controllers\>') != -1 || match(current_file, '\<models\>') != -1 || match(current_file, '\<views\>') != -1 || match(current_file, '\<helpers\>') != -1
+  let rake_task = match(current_file, 'tasks') != -1
   if going_to_spec
     if in_app
       let new_file = substitute(new_file, '^app/', '', '')
     end
     let new_file = substitute(new_file, '\.e\?rb$', '_spec.rb', '')
+    let new_file = substitute(new_file, '\.e\?rake$', '_spec.rb', '')
     let new_file = 'spec/' . new_file
-  else
-    let new_file = substitute(new_file, '_spec\.rb$', '.rb', '')
+  else "going to source
+    if rake_task
+      let new_file = substitute(new_file, '_spec\.rb$', '.rake', '')
+    else
+      let new_file = substitute(new_file, '_spec\.rb$', '.rb', '')
+    end
     let new_file = substitute(new_file, '^spec/', '', '')
     if in_app
       let new_file = 'app/' . new_file
@@ -181,3 +187,21 @@ let mapleader="\\"
 "set runtimepath+=/usr/local/go/misc/vim
 "filetype plugin indent on
 "au BufRead,BufNewFile *.md set filetype=markdown
+" Run a given vim command on the results of fuzzy selecting from a given shell
+" command. See usage below.
+function! SelectaCommand(choice_command, selecta_args, vim_command)
+  try
+    silent let selection = system(a:choice_command . " | selecta " . a:selecta_args)
+  catch /Vim:Interrupt/
+    " Swallow the ^C so that the redraw below happens; otherwise there will be
+    " leftovers from selecta on the screen
+    redraw!
+    return
+  endtry
+  redraw!
+  exec a:vim_command . " " . selection
+endfunction
+
+" Find all files in all non-dot directories starting in the working directory.
+" Fuzzy select one of those. Open the selected file with :e.
+nnoremap <leader>f :call SelectaCommand("find * -type f", "", ":e")<cr>
