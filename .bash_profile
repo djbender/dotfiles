@@ -36,5 +36,6 @@ export PATH="~/bin:$PATH"
 
 alias aneditor=vim
 alias yavascript=node
+alias rubby=ruby
 
 fortune -n 160 | cowsay
