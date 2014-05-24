@@ -1,1 +1,0 @@
-/Users/derek/Code/powerline-shell/powerline-shell.py
