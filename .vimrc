@@ -1,27 +1,9 @@
 " This is Derek Bender's .vimrc file
 " vim:set ts=2 sts=2 sw=2 expandtab:
 
-autocmd!
+source /usr/local/lib/python2.7/site-packages/powerline/bindings/vim/plugin/powerline.vim
 
 call pathogen#infect()
-"call pathogen#helptags()
-
-"autocmd VimEnter * NERDTree
-"autocmd BufEnter * NERDTreeMirror
-
-"python from powerline.vim import setup as powerline_setup
-"python powerline_setup()
-"python del powerline_setup
-"
-"set rtp+=/Users/derek/Library/Python/2.7/lib/python/site-packages/powerline/bindings/vim
-
-" vim-airline
-let g:airline_theme='light'
-let g:airline_powerline_fonts=1
-
-nnoremap <silent> <Leader>t :CommandT<CR>
-nmap <silent> <leader>k :NERDTreeToggle<cr>
-nmap <silent> <leader>h <Esc>:call ToggleHardMode()<CR>
 
 " Prevent Vim from clobbering the scrollback buffer. See
 " http://www.shallowsky.com/linux/noaltscreen.html
@@ -84,9 +66,8 @@ set encoding=utf-8
 
 set wildmode=longest,list
 set wildmenu
-let mapleader="," "what. why?
-set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)\ [%{&fo}]
-"hi User1 term=inverse,bold cterm=inverse,bold ctermfg=red
+" old status line before powerline
+"set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)\ [%{&fo}]
 map <Left> :echo "no!"<cr>
 map <Right> :echo "no!"<cr>
 map <Up> :echo "no!"<cr>
