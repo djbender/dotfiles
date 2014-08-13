@@ -186,3 +186,6 @@ endfunction
 " Find all files in all non-dot directories starting in the working directory.
 " Fuzzy select one of those. Open the selected file with :e.
 nnoremap <leader>f :call SelectaCommand("find * -type f", "", ":e")<cr>
+
+autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab
+highlight clear SignColumn
