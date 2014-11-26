@@ -28,3 +28,6 @@
 [submodule ".vim/bundle/rust.vim"]
 	path = .vim/bundle/rust.vim
 	url = https://github.com/wting/rust.vim.git
+[submodule ".vim/bundle/vim-seeing-is-believing"]
+	path = .vim/bundle/vim-seeing-is-believing
+	url = git@github.com:hwartig/vim-seeing-is-believing.git
