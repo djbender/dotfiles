@@ -3,6 +3,8 @@ source '/usr/local/share/chruby/auto.sh'
 
 chruby 2.1.5
 
+export RUBYGEMS_GEMDEPS=-
+
 export PATH="/usr/local/heroku/bin:$PATH"
 export PATH="/Applications/Postgres.app/Contents/Versions/9.3/bin:$PATH"
 export PATH="~/bin:$PATH"
@@ -42,6 +44,12 @@ if command -v tmux>/dev/null; then
   [[ ! $TERM =~ screen ]] && [ -z $TMUX ] && exec tmux
   #fortune -n 160 | cowsay
 fi
+
+[[ -s `brew --prefix`/etc/autojump.sh ]] && . `brew --prefix`/etc/autojump.sh
+
+export CDPATH=$CDPATH:~/Code/FOSS
+
+alias convert_flac_to_alac='for file in *.flac; do ffmpeg -i "$file" -acodec alac "`basename "$file" .flac`.m4a"; done;'
 
 alias start_mongodb='launchctl load /usr/local/opt/mongodb/homebrew.mxcl.mongodb.plist'
 alias stop_mongodb='launchctl unload /usr/local/opt/mongodb/homebrew.mxcl.mongodb.plist'
