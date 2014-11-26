@@ -167,7 +167,7 @@ let mapleader="\\"
 "filetype plugin indent off
 "set runtimepath+=/usr/local/go/misc/vim
 "filetype plugin indent on
-"au BufRead,BufNewFile *.md set filetype=markdown
+au BufRead,BufNewFile *.md set filetype=markdown
 " Run a given vim command on the results of fuzzy selecting from a given shell
 " command. See usage below.
 function! SelectaCommand(choice_command, selecta_args, vim_command)
@@ -188,4 +188,13 @@ endfunction
 nnoremap <leader>f :call SelectaCommand("find * -type f", "", ":e")<cr>
 
 autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab
+autocmd FileType rust setlocal sw=2 ts=2 sts=2 et
 highlight clear SignColumn
+
+nmap <buffer> <leader>r <Plug>(seeing-is-believing-run)
+xmap <buffer> <leader>r <Plug>(seeing-is-believing-run)
+imap <buffer> <leader>r <Plug>(seeing-is-believing-run)
+
+nmap <buffer> <leader>m <Plug>(seeing-is-believing-mark)
+xmap <buffer> <leader>m <Plug>(seeing-is-believing-mark)
+imap <buffer> <leader>m <Plug>(seeing-is-believing-mark)

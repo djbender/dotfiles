@@ -8,6 +8,9 @@
 	decorate = full
 [color]
 	ui = true
+	diff = auto
+	status = auto
+	branch = auto
 [help]
 	autocorrect = 1
 [push]

@@ -1,15 +1,14 @@
 source '/usr/local/share/chruby/chruby.sh'
 source '/usr/local/share/chruby/auto.sh'
 
-#chruby 2.1.2
-chruby 2.0.0-p353
+chruby 2.1.5
 
 export PATH="/usr/local/heroku/bin:$PATH"
-export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
+export PATH="/Applications/Postgres.app/Contents/Versions/9.3/bin:$PATH"
 export PATH="~/bin:$PATH"
 #export PATH='/usr/local/bin:$PATH'
 
-source '/usr/local/Cellar/git/1.9.3/etc/bash_completion.d/git-prompt.sh'
+source "`find /usr/local/Cellar/git -type f -name 'git-prompt.sh'| tail -1`"
 export GIT_PS1_SHOWCOLORHINTS=1
 export GIT_PS1_SHOWDIRTYSTATE=1
 export PROMPT_COMMAND='__git_ps1 "\u@\h:\w \[\e[0;31m\]$(__ruby_version)\[\e[0m\]" "\n∴ "'
@@ -41,5 +40,8 @@ alias rubby=ruby
 
 if command -v tmux>/dev/null; then
   [[ ! $TERM =~ screen ]] && [ -z $TMUX ] && exec tmux
-  fortune -n 160 | cowsay
+  #fortune -n 160 | cowsay
 fi
+
+alias start_mongodb='launchctl load /usr/local/opt/mongodb/homebrew.mxcl.mongodb.plist'
+alias stop_mongodb='launchctl unload /usr/local/opt/mongodb/homebrew.mxcl.mongodb.plist'
