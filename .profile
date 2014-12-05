@@ -3,8 +3,6 @@ source '/usr/local/share/chruby/auto.sh'
 
 chruby 2.1.5
 
-#export RUBYGEMS_GEMDEPS=-
-
 export PATH="/usr/local/heroku/bin:$PATH"
 export PATH="/Applications/Postgres.app/Contents/Versions/9.3/bin:$PATH"
 export PATH="~/bin:$PATH"
