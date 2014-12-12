@@ -3,7 +3,7 @@ source '/usr/local/share/chruby/auto.sh'
 
 chruby 2.1.5
 
-export RUBYGEMS_GEMDEPS=-
+#export RUBYGEMS_GEMDEPS=-
 
 export PATH="/usr/local/heroku/bin:$PATH"
 export PATH="/Applications/Postgres.app/Contents/Versions/9.3/bin:$PATH"
@@ -47,7 +47,7 @@ fi
 
 [[ -s `brew --prefix`/etc/autojump.sh ]] && . `brew --prefix`/etc/autojump.sh
 
-export CDPATH=$CDPATH:~/Code/FOSS
+export CDPATH=$CDPATH:~/Code/foss
 
 alias convert_flac_to_alac='for file in *.flac; do ffmpeg -i "$file" -acodec alac "`basename "$file" .flac`.m4a"; done;'
 
