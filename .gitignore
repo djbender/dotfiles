@@ -51,6 +51,7 @@
 /.python-eggs
 /.rbx
 /.rnd
+/.rubies
 /.rubinius_last_error
 /.rvm
 /.sh_history
