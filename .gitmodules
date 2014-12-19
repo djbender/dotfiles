@@ -31,3 +31,9 @@
 [submodule ".vim/bundle/vim-seeing-is-believing"]
 	path = .vim/bundle/vim-seeing-is-believing
 	url = git@github.com:hwartig/vim-seeing-is-believing.git
+[submodule "/Users/dbender/.vim/bundle/ember.vim"]
+	path = .vim/bundle/ember.vim
+	url = https://github.com/dsawardekar/ember.vim
+[submodule "/Users/dbender/.vim/bundle/tagbar"]
+	path = .vim/bundle/tagbar
+	url = git@github.com:majutsushi/tagbar.git
