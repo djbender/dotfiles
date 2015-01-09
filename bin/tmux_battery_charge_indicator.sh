@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Copyright (c) 2013 Aaron Lasseigne
-# 
+#
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
 # files (the "Software"), to deal in the Software without
@@ -10,10 +10,10 @@
 # copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following
 # conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 # OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -24,6 +24,7 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 
 HEART='♥'
+NUMBER_OF_HEARTS=20
 
 if [[ `uname` == 'Linux' ]]; then
   current_charge=$(cat /proc/acpi/battery/BAT1/state | grep 'remaining capacity' | awk '{print $3}')
@@ -34,15 +35,15 @@ else
   total_charge=$(echo $battery_info | grep -o '"MaxCapacity" = [0-9]\+' | awk '{print $3}')
 fi
 
-charged_slots=$(echo "(($current_charge/$total_charge)*10)+1" | bc -l | cut -d '.' -f 1)
-if [[ $charged_slots -gt 10 ]]; then
-  charged_slots=10
+charged_slots=$(echo "(($current_charge/$total_charge)*$NUMBER_OF_HEARTS)+1" | bc -l | cut -d '.' -f 1)
+if [[ $charged_slots -gt $NUMBER_OF_HEARTS ]]; then
+  charged_slots=$NUMBER_OF_HEARTS
 fi
 
 echo -n '#[fg=red]'
 for i in `seq 1 $charged_slots`; do echo -n "$HEART"; done
 
-if [[ $charged_slots -lt 10 ]]; then
+if [[ $charged_slots -lt $NUMBER_OF_HEARTS ]]; then
   echo -n '#[fg=white]'
-  for i in `seq 1 $(echo "10-$charged_slots" | bc)`; do echo -n "$HEART"; done
+  for i in `seq 1 $(echo "$NUMBER_OF_HEARTS-$charged_slots" | bc)`; do echo -n "$HEART"; done
 fi
