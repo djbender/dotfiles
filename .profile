@@ -1,7 +1,9 @@
 source '/usr/local/share/chruby/chruby.sh'
 source '/usr/local/share/chruby/auto.sh'
 
-chruby 2.1.5
+chruby 2.1.7
+
+#export RUBYGEMS_GEMDEPS=-
 
 export PATH="/usr/local/heroku/bin:$PATH"
 export PATH="/Applications/Postgres.app/Contents/Versions/9.3/bin:$PATH"
