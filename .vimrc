@@ -60,7 +60,8 @@ set showcmd
 syntax on
 set t_Co=256 " 256 colors
 set background=light
-color default
+"color default
+colorscheme Tomorrow
 filetype plugin indent on
 set encoding=utf-8
 
@@ -162,11 +163,6 @@ let mapleader=","
 nnoremap <leader>. :call OpenTestAlternate()<cr>
 let mapleader="\\"
 
-" for go
-"filetype off
-"filetype plugin indent off
-"set runtimepath+=/usr/local/go/misc/vim
-"filetype plugin indent on
 au BufRead,BufNewFile *.md set filetype=markdown
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -193,7 +189,7 @@ endfunction
 
 nnoremap <leader>f :call SelectaFile(".")<cr>
 
-autocmd FileType javascript setlocal shiftwidth=4 tabstop=4 softtabstop=4 expandtab
+autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab
 autocmd FileType rust setlocal sw=2 ts=2 sts=2 et
 highlight clear SignColumn
 
