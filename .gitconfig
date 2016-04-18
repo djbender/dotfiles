@@ -1,6 +1,6 @@
 [user]
 	name = Derek Bender
-  email = 'nofeardjb@gmail.com'
+	useconfigonly = true
 [core]
 	excludesfile = ~/.gitignore_global
 	editor = /usr/local/bin/vim
@@ -19,3 +19,7 @@
 	rebase = true
 [alias]
   branchdate = !git for-each-ref --sort='-authordate:iso8601' --format='  %(authordate:iso8601)%09%(objectname:short)%09%(refname)' refs/heads
+  simplelog = !git log --pretty=oneline --abbrev-commit
+	ctags = !.git/hooks/ctags
+[init]
+	templatedir = ~/.git_template

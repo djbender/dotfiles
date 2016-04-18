@@ -13,12 +13,12 @@ set scrolloff=3
 " display incomplete commands
 set showcmd
 " Fix slow O inserts
-set timeout timeoutlen=1000 ttimeoutlen=100
+"set timeout timeoutlen=1000 ttimeoutlen=100
 
 set hidden
 set visualbell
 set number
-set paste
+"set paste "in compatible with auto format?
 set nocompatible
 set history=10000
 set expandtab
@@ -30,6 +30,15 @@ set smartindent
 set laststatus=2 " Always display the statusline in all windows
 set noshowmode " Hide the default mode text (e.g. -- INSERT -- below the statusline)
 
+set viminfo='20,<1000,s10,h
+
+set timeout         " Do time out on mappings and others
+set timeoutlen=1000 " Wait {num} ms before timing out a mapping
+
+" When you’re pressing Escape to leave insert mode in the terminal, it will by
+" default take a second or another keystroke to leave insert mode completely
+" and update the statusline. This fixes that. I got this from:
+" https://powerline.readthedocs.org/en/latest/tipstricks.html#vim
 if ! has('gui_running')
   set ttimeoutlen=10
   augroup FastEscape
@@ -38,6 +47,7 @@ if ! has('gui_running')
     au InsertLeave * set timeoutlen=1000
   augroup END
 endif
+
 set ambiwidth=single
 "if version >= 700
 "  au InsertEnter * hi StatusLine term=reverse ctermbg=5 gui=undercurl guisp=Magenta
@@ -54,8 +64,6 @@ set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
-" display incomplete commands
-set showcmd
 " Enable highlighting syntax
 syntax on
 set t_Co=256 " 256 colors
@@ -89,7 +97,8 @@ endfunction
 inoremap <tab> <c-r>=InsertTabWrapper()<cr>
 inoremap <s-tab> <c-n>
 
-autocmd Filetype markdown setlocal tw=74 fo+=t wm=0 spell spelllang=en_us
+"autocmd Filetype markdown setlocal tw=74 fo+=cqta wm=0 spell spelllang=en_us ff=unix
+autocmd Filetype markdown setlocal tw=74 fo+=qt wm=0 spell spelllang=en_us ff=unix
 
 " Strip trailing whitespace
 function! <SID>StripTrailingWhitespaces()
@@ -106,7 +115,7 @@ endfunction
 autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
 
 autocmd FileType ruby,eruby :let g:AutoCloseExpandEnterOn=""
-autocmd Filetype gitcommit setlocal spell textwidth=72
+autocmd Filetype gitcommit setlocal spell tw=72
 
 "if version >= 703
 "  function! NumberToggle()
@@ -188,6 +197,24 @@ function! SelectaFile(path)
 endfunction
 
 nnoremap <leader>f :call SelectaFile(".")<cr>
+nnoremap <leader>gv :call SelectaFile("app/views")<cr>
+nnoremap <leader>gc :call SelectaFile("app/controllers")<cr>
+nnoremap <leader>gm :call SelectaFile("app/models")<cr>
+nnoremap <leader>gh :call SelectaFile("app/helpers")<cr>
+nnoremap <leader>gl :call SelectaFile("lib")<cr>
+nnoremap <leader>gp :call SelectaFile("public")<cr>
+nnoremap <leader>gs :call SelectaFile("public/stylesheets")<cr>
+nnoremap <leader>gf :call SelectaFile("features")<cr>
+
+"Fuzzy select
+function! SelectaIdentifier()
+  " Yank the word under the cursor into the z register
+  normal "zyiw
+  " Fuzzy match files in the current directory, starting with the word under
+  " the cursor
+  call SelectaCommand("find * -type f", "-s " . @z, ":e")
+endfunction
+nnoremap <c-g> :call SelectaIdentifier()<cr>
 
 autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab
 autocmd FileType rust setlocal sw=2 ts=2 sts=2 et
@@ -200,3 +227,43 @@ imap <buffer> <leader>r <Plug>(seeing-is-believing-run)
 nmap <buffer> <leader>m <Plug>(seeing-is-believing-mark)
 xmap <buffer> <leader>m <Plug>(seeing-is-believing-mark)
 imap <buffer> <leader>m <Plug>(seeing-is-believing-mark)
+
+" vim-javascript
+"let g:javascript_conceal_function   = "ƒ"
+"let g:javascript_conceal_null       = "ø"
+"let g:javascript_conceal_this       = "@"
+"let g:javascript_conceal_return     = "⇚"
+"let g:javascript_conceal_undefined  = "¿"
+"let g:javascript_conceal_NaN        = "ℕ"
+"let g:javascript_conceal_prototype  = "¶"
+"let g:javascript_conceal_static     = "•"
+"let g:javascript_conceal_super      = "Ω"
+
+" eslint in jsx files
+" $ npm install -g eslint babel-eslint eslint-plugin-react
+" source: https://jaxbot.me/articles/setting-up-vim-for-react-js-jsx-02-03-2015
+let g:syntastic_javascript_checkers = ['eslint']
+
+let g:rainbow_active = 1
+let g:rainbow_conf = {
+\   'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
+\   'ctermfgs': ['red', 'darkcyan', 'darkmagenta', 'darkblue', 'darkred', 'cyan', 'magenta', 'green'],
+\   'operators': '_,_',
+\   'parentheses': ['start=/(/ end=/)/ fold', 'start=/\[/ end=/\]/ fold', 'start=/{/ end=/}/ fold'],
+\   'separately': {
+\       '*': {},
+\       'tex': {
+\           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/'],
+\       },
+\       'lisp': {
+\           'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'],
+\       },
+\       'vim': {
+\           'parentheses': ['start=/(/ end=/)/', 'start=/\[/ end=/\]/', 'start=/{/ end=/}/ fold', 'start=/(/ end=/)/ containedin=vimFuncBody', 'start=/\[/ end=/\]/ containedin=vimFuncBody', 'start=/{/ end=/}/ fold containedin=vimFuncBody'],
+\       },
+\       'html': {
+\           'parentheses': ['start=/\v\<((area|base|br|col|embed|hr|img|input|keygen|link|menuitem|meta|param|source|track|wbr)[ >])@!\z([-_:a-zA-Z0-9]+)(\s+[-_:a-zA-Z0-9]+(\=("[^"]*"|'."'".'[^'."'".']*'."'".'|[^ '."'".'"><=`]*))?)*\>/ end=#</\z1># fold'],
+\       },
+\       'css': 0,
+\   }
+\}
