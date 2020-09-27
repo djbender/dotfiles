@@ -1,9 +1,53 @@
 " This is Derek Bender's .vimrc file
 " vim:set ts=2 sts=2 sw=2 expandtab:
+set encoding=utf-8
+scriptencoding utf-8
 
-source /usr/local/lib/python2.7/site-packages/powerline/bindings/vim/plugin/powerline.vim
+" be iMproved, required for modern vim, Vundle
+set nocompatible
 
-call pathogen#infect()
+" Speed hacks
+" use old regex engine, new one is slow for ruby.vim
+set regexpengine=1
+set ttyfast
+set lazyredraw
+set redrawtime=10000
+
+" required for Vundle
+filetype off
+" set the runtime path to include Vundle and initialize
+set runtimepath+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'vim-ruby/vim-ruby'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'luochen1990/rainbow'
+Plugin 'tpope/vim-bundler'
+Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-endwise'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-rails'
+Plugin 'Keithbsmiley/rspec.vim'
+Plugin 'vim-syntastic/syntastic'
+Plugin 'hwartig/vim-seeing-is-believing'
+Plugin 'slim-template/vim-slim'
+Plugin 'dense-analysis/ale' " ALE: https://github.com/dense-analysis/ale
+Plugin 'itchyny/lightline.vim' " replaces powerline
+Plugin 'junegunn/fzf', {'rtp': '/usr/local/opt/fzf'}
+Plugin 'xaizek/preamble.vim'
+Plugin 'junegunn/vim-emoji'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'hashivim/vim-terraform' "syntax highlighting
+" Themes
+Plugin 'buc0/my-vim-colors'
+Plugin 'nightsense/stellarized'
+Plugin 'srcery-colors/srcery-vim'
+
+" end of Vundle plugins declarations
+call vundle#end()            " required
+filetype plugin indent on    " required
 
 " Prevent Vim from clobbering the scrollback buffer. See
 " http://www.shallowsky.com/linux/noaltscreen.html
@@ -19,7 +63,6 @@ set hidden
 set visualbell
 set number
 "set paste "in compatible with auto format?
-set nocompatible
 set history=10000
 set expandtab
 set tabstop=2
@@ -49,10 +92,6 @@ if ! has('gui_running')
 endif
 
 set ambiwidth=single
-"if version >= 700
-"  au InsertEnter * hi StatusLine term=reverse ctermbg=5 gui=undercurl guisp=Magenta
-"  au InsertLeave * hi StatusLine term=reverse ctermfg=0 ctermbg=2 gui=bold,reverse
-"endif
 set showmatch
 set incsearch
 set hlsearch
@@ -64,14 +103,76 @@ set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
+" no duplicates in ctags results tray due to file system case sensitivity
+" issue: https://vi.stackexchange.com/a/6001
+set tags=tags
+set tags^=./.git/tags;
+
+""""""""""""""""""""""
+" colorscheme config "
+""""""""""""""""""""""
 " Enable highlighting syntax
 syntax on
 set t_Co=256 " 256 colors
-set background=light
-"color default
-colorscheme Tomorrow
-filetype plugin indent on
-set encoding=utf-8
+function! <SID>darkMode()
+  highlight ALEError ctermbg=18
+  " let g:lightline = {
+  "       \ 'colorscheme': 'srcery'
+  "       \ }
+  " let g:srcery_italic = 1
+  " colorscheme srcery
+  colorscheme synthwave
+
+  augroup colorschemetoggle
+    autocmd!
+    autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=233
+    autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=234
+  augroup END
+endfunction
+
+function! <SID>lightMode()
+  highlight ALEError ctermbg=15
+  let g:lightline = {
+        \ 'colorscheme': 'default',
+        \ }
+  colorscheme default
+  set background=light
+  augroup colorschemetoggle
+    autocmd!
+    autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  ctermbg=231
+    autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=255
+  augroup END
+endfunction
+
+function! <SID>ToggleDarkLightMode()
+  if &background ==# 'dark'
+    call <SID>darkMode()
+  else
+    call <SID>lightMode()
+  endif
+endfunction
+
+nnoremap <Leader>bg :call <SID>ToggleDarkLightMode()<CR>
+
+let dark = systemlist('defaults read -g AppleInterfaceStyle')
+
+if !empty(dark) && dark[0] ==# 'Dark'
+  " if v:shell_error ==# '0' " dark mode
+  call <SID>darkMode()
+else
+  call <SID>lightMode()
+endif
+
+" optional yamllint config from: https://www.arthurkoziel.com/setting-up-vim-for-yaml/
+" let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+" let g:ale_sign_error = '✘'
+" let g:ale_sign_warning = '⚠'
+" let g:ale_lint_on_text_changed = 'never'
+
+" vim-indent-guides
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_auto_colors = 0
+let g:indent_guides_start_level = 2
 
 set wildmode=longest,list
 set wildmenu
@@ -82,168 +183,9 @@ map <Right> :echo "no!"<cr>
 map <Up> :echo "no!"<cr>
 map <Down> :echo "no!"<cr>
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" MULTIPURPOSE TAB KEY
-" " Indent if we're at the beginning of a line. Else, do completion.
-" """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! InsertTabWrapper()
-  let col = col('.') - 1
-  if !col || getline('.')[col - 1] !~ '\k'
-    return "\<tab>"
-  else
-    return "\<c-p>"
-  endif
-endfunction
-inoremap <tab> <c-r>=InsertTabWrapper()<cr>
-inoremap <s-tab> <c-n>
+let g:ruby_indent_assignment_style = 'variable'
 
-"autocmd Filetype markdown setlocal tw=74 fo+=cqta wm=0 spell spelllang=en_us ff=unix
-autocmd Filetype markdown setlocal tw=74 fo+=qt wm=0 spell spelllang=en_us ff=unix
-
-" Strip trailing whitespace
-function! <SID>StripTrailingWhitespaces()
-  " Preparation: save last search, and cursor position.
-  let _s=@/
-  let l = line(".")
-  let c = col(".")
-  " Do the business:
-  %s/\s\+$//e
-  " Clean up: restore previous search history, and cursor position
-  let @/=_s
-  call cursor(l, c)
-endfunction
-autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
-
-autocmd FileType ruby,eruby :let g:AutoCloseExpandEnterOn=""
-autocmd Filetype gitcommit setlocal spell tw=72
-
-"if version >= 703
-"  function! NumberToggle()
-"    if(&relativenumber == 1)
-"      set number
-"    else
-"      set relativenumber
-"    endif
-"  endfunc
-"
-"nnoremap <C-n> :call NumberToggle()<cr>
-"autocmd FocusLost * :set number
-"autocmd InsertEnter * :set number
-"autocmd InsertLeave * :set relativenumber
-"autocmd CursorMoved * :set relativenumber
-"endif
-
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" SWITCH BETWEEN TEST AND PRODUCTION CODE
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! OpenTestAlternate()
-  let new_file = AlternateForCurrentFile()
-  exec ':e ' . new_file
-endfunction
-function! AlternateForCurrentFile()
-  let current_file = expand("%")
-  let new_file = current_file
-  let in_spec = match(current_file, '^spec/') != -1
-  let going_to_spec = !in_spec
-  let in_app = match(current_file, '\<controllers\>') != -1 || match(current_file, '\<models\>') != -1 || match(current_file, '\<views\>') != -1 || match(current_file, '\<helpers\>') != -1
-  let rake_task = match(current_file, 'tasks') != -1
-  if going_to_spec
-    if in_app
-      let new_file = substitute(new_file, '^app/', '', '')
-    end
-    let new_file = substitute(new_file, '\.e\?rb$', '_spec.rb', '')
-    let new_file = substitute(new_file, '\.e\?rake$', '_spec.rb', '')
-    let new_file = 'spec/' . new_file
-  else "going to source
-    if rake_task
-      let new_file = substitute(new_file, '_spec\.rb$', '.rake', '')
-    else
-      let new_file = substitute(new_file, '_spec\.rb$', '.rb', '')
-    end
-    let new_file = substitute(new_file, '^spec/', '', '')
-    if in_app
-      let new_file = 'app/' . new_file
-    end
-  endif
-  return new_file
-endfunction
-let mapleader=","
-nnoremap <leader>. :call OpenTestAlternate()<cr>
-let mapleader="\\"
-
-au BufRead,BufNewFile *.md set filetype=markdown
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Selecta Mappings
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Run a given vim command on the results of fuzzy selecting from a given shell
-" command. See usage below.
-function! SelectaCommand(choice_command, selecta_args, vim_command)
-  try
-    let selection = system(a:choice_command . " | selecta " . a:selecta_args)
-  catch /Vim:Interrupt/
-    " Swallow the ^C so that the redraw below happens; otherwise there will be
-    " leftovers from selecta on the screen
-    redraw!
-    return
-  endtry
-  redraw!
-  exec a:vim_command . " " . selection
-endfunction
-
-function! SelectaFile(path)
-  call SelectaCommand("find " . a:path . "/* -type f", "", ":e")
-endfunction
-
-nnoremap <leader>f :call SelectaFile(".")<cr>
-nnoremap <leader>gv :call SelectaFile("app/views")<cr>
-nnoremap <leader>gc :call SelectaFile("app/controllers")<cr>
-nnoremap <leader>gm :call SelectaFile("app/models")<cr>
-nnoremap <leader>gh :call SelectaFile("app/helpers")<cr>
-nnoremap <leader>gl :call SelectaFile("lib")<cr>
-nnoremap <leader>gp :call SelectaFile("public")<cr>
-nnoremap <leader>gs :call SelectaFile("public/stylesheets")<cr>
-nnoremap <leader>gf :call SelectaFile("features")<cr>
-
-"Fuzzy select
-function! SelectaIdentifier()
-  " Yank the word under the cursor into the z register
-  normal "zyiw
-  " Fuzzy match files in the current directory, starting with the word under
-  " the cursor
-  call SelectaCommand("find * -type f", "-s " . @z, ":e")
-endfunction
-nnoremap <c-g> :call SelectaIdentifier()<cr>
-
-autocmd FileType javascript setlocal shiftwidth=2 tabstop=2 softtabstop=2 expandtab
-autocmd FileType rust setlocal sw=2 ts=2 sts=2 et
-highlight clear SignColumn
-
-nmap <buffer> <leader>r <Plug>(seeing-is-believing-run)
-xmap <buffer> <leader>r <Plug>(seeing-is-believing-run)
-imap <buffer> <leader>r <Plug>(seeing-is-believing-run)
-
-nmap <buffer> <leader>m <Plug>(seeing-is-believing-mark)
-xmap <buffer> <leader>m <Plug>(seeing-is-believing-mark)
-imap <buffer> <leader>m <Plug>(seeing-is-believing-mark)
-
-" vim-javascript
-"let g:javascript_conceal_function   = "ƒ"
-"let g:javascript_conceal_null       = "ø"
-"let g:javascript_conceal_this       = "@"
-"let g:javascript_conceal_return     = "⇚"
-"let g:javascript_conceal_undefined  = "¿"
-"let g:javascript_conceal_NaN        = "ℕ"
-"let g:javascript_conceal_prototype  = "¶"
-"let g:javascript_conceal_static     = "•"
-"let g:javascript_conceal_super      = "Ω"
-
-" eslint in jsx files
-" $ npm install -g eslint babel-eslint eslint-plugin-react
-" source: https://jaxbot.me/articles/setting-up-vim-for-react-js-jsx-02-03-2015
-let g:syntastic_javascript_checkers = ['eslint']
-
+" rainbow plugin
 let g:rainbow_active = 1
 let g:rainbow_conf = {
 \   'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick'],
@@ -267,3 +209,65 @@ let g:rainbow_conf = {
 \       'css': 0,
 \   }
 \}
+
+" Strip trailing whitespace
+function! <SID>StripTrailingWhitespaces()
+  " Preparation: save last search, and cursor position.
+  let _s=@/
+  let l = line('.')
+  let c = col('.')
+  " Do the business:
+  %s/\s\+$//e
+  " Clean up: restore previous search history, and cursor position
+  let @/=_s
+  call cursor(l, c)
+endfunction
+
+autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
+
+let g:syntastic_always_populate_loc_list = 0
+let g:syntastic_auto_loc_list = 0
+"let g:syntastic_check_on_open = 0
+"let g:syntastic_check_on_wq = 0
+let g:syntastic_check_on_w = 1
+" let g:syntastic_javascript_checkers=['eslint']
+" let g:syntastic_javascript_eslint_exec = "node_modules/.bin/eslint"
+let g:syntastic_ruby_checkers = ['mri']
+let g:syntastic_sh_shellcheck_args = '-x'
+
+set omnifunc=syntaxcomplete#Complete
+autocmd FileType ruby,eruby let g:rubycomplete_buffer_loading = 1
+autocmd FileType ruby,eruby let g:rubycomplete_classes_in_global = 1
+autocmd FileType ruby,eruby let g:rubycomplete_rails = 1
+"noremap <C-]> g<C-]>
+
+
+autocmd FileType make set noexpandtab
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType yaml setlocal indentexpr=
+
+"autocmd FileType ruby setlocal foldmethod=expr foldexpr=getline(v:lnum)=~'^\s*#'
+"autocmd FileType javascript setlocal foldmethod=expr foldexpr=getline(v:lnum)=~'[^\s\|]\*'
+
+let g:gitgutter_max_signs = 1000
+let g:gitgutter_sign_added = emoji#for('small_blue_diamond')
+let g:gitgutter_sign_modified = emoji#for('small_orange_diamond')
+let g:gitgutter_sign_removed = emoji#for('small_red_triangle')
+let g:gitgutter_sign_modified_removed = emoji#for('collision')
+set completefunc=emoji#complete
+
+autocmd BufNewFile,BufRead *.yml.example set filetype=yaml
+autocmd BufNewFile,BufRead *.pdf.prawn set filetype=ruby
+autocmd BufNewFile,BufRead COMMIT_EDITMSG setlocal spell
+autocmd BufNewFile,BufRead Jenkinsfile set filetype=groovy
+autocmd BufNewFile,BufRead Dockerfile* set filetype=dockerfile
+
+if has ('autocmd') " Remain compatible with earlier versions
+  augroup vimrc     " Source vim configuration upon save
+    autocmd! BufWritePost $MYVIMRC source % | echom "Reloaded " . $MYVIMRC | redraw
+    autocmd! BufWritePost $MYGVIMRC if has('gui_running') | so % | echom "Reloaded " . $MYGVIMRC | endif | redraw
+  augroup END
+endif " has autocmd
+
+" syntax sync minlines=10000
+syntax sync fromstart

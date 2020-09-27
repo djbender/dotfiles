@@ -1,25 +1,23 @@
+[core]
+	excludesfile = /Users/dbender/.gitignore_global
+	trustctime = false
+	abbrev = 7
 [user]
 	name = Derek Bender
-	useconfigonly = true
-[core]
-	excludesfile = ~/.gitignore_global
-	editor = /usr/local/bin/vim
-[log]
-	decorate = full
-[color]
-	ui = true
-	diff = auto
-	status = auto
-	branch = auto
-[help]
-	autocorrect = 1
-[push]
-	default = current
-[pull]
-	rebase = true
+	email = 170351+djbender@users.noreply.github.com
 [alias]
-  branchdate = !git for-each-ref --sort='-authordate:iso8601' --format='  %(authordate:iso8601)%09%(objectname:short)%09%(refname)' refs/heads
-  simplelog = !git log --pretty=oneline --abbrev-commit
+	clown = clone
 	ctags = !.git/hooks/ctags
-[init]
-	templatedir = ~/.git_template
+  ca = commit --amend --no-edit
+  cane = commit --amend --no-edit
+  whatadded = log --diff-filter=A
+  filenames = show HEAD --name-only
+# [init]
+# 	templatedir = ~/.git_template
+[pull]
+	ff = only
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
