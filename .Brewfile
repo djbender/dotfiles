@@ -78,7 +78,7 @@ brew 'curl'
 brew 'ddrescue'
 
 # Isolated development environments using Docker
-brew 'docker-compose'
+brew 'docker-compose', link: false
 
 # Text processing system for reStructuredText
 brew 'docutils'

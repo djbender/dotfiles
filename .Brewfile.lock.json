@@ -570,6 +570,9 @@
               "sha256": "8db2876a849e55de80f69c34f7c13fbf5fd5f7e547406738f46841db5fb3691a"
             }
           }
+        },
+        "options": {
+          "link": false
         }
       },
       "docutils": {
