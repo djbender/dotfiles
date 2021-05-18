@@ -277,7 +277,6 @@ brew 'yasm'
 # Download YouTube videos from the command-line
 brew 'youtube-dl'
 
-
 # Casks
 cask '1password'
 cask 'carbon-copy-cloner'
@@ -294,6 +293,7 @@ cask 'numi' # calculator
 cask 'plexamp'
 cask 'slack'
 cask 'sublime-text'
+cask 'timemachineeditor'
 cask 'virtualbox'
 cask 'vlc'
 cask 'xld'
